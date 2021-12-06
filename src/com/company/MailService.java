@@ -3,10 +3,34 @@ package com.company;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class MailService <T> extends HashMap implements Consumer<AbstractMailSalary<T>> {
+public class MailService <T> implements Consumer<AbstractMailSalary<T>> {
+
+    HashMap<String, List<T>> mailBox = new HashMap<String, List<T>>() {
+        public List<T> get(Object key) {
+            return getOrDefault(key, new LinkedList<>());
+        }
+    };
+
+    @Override
+    public void accept(AbstractMailSalary<T> mail) {
+        String to = mail.getTo();
+        List<T> list = mailBox.get(to);
+        list.add(mail.getContent());
+        mailBox.put(to, list);
+    }
+
+    public HashMap<String, List<T>> getMailBox() {
+        return mailBox;
+    }
+
+
+/*
     Map<String, List<T>> mailBox = new HashMap<String, List<T>>() {
         @Override
         public List<T> get(Object key) {
+            return super.getOrDefault(key, new LinkedList<T>());
+          */
+/*
             if (containsKey(key)) {
                 return (List<T>) super.getOrDefault(key, null);
             } else {
@@ -14,6 +38,9 @@ public class MailService <T> extends HashMap implements Consumer<AbstractMailSal
                 mailBox.put((String) key, list);
                 return list;
             }
+
+           *//*
+
         }
     };
 
@@ -31,6 +58,7 @@ public class MailService <T> extends HashMap implements Consumer<AbstractMailSal
         }
         list.add(abstractMailSalary.getContent());
     }
+*/
 
 
 }
